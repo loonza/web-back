@@ -1,0 +1,383 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo img {
+    width: 50px;
+    height: auto;
+    margin-right: 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2em;
+    font-family: cursive;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1em;
+}
+
+nav a:hover {
+    color: #ffdd57;
+    text-decoration: underline;
+}
+
+nav a.active {
+    font-weight: bold;
+    color: #ffdd57;
+    text-decoration: underline;
+}
+
+.hero {
+    background-image: url('фон.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 0 20px;
+}
+
+
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+
+.swiper {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #ffffff; /* Цвет фона для слайдера */
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+.swiper-pagination-bullet {
+    background-color: black;
+}
+
+
+.add-image-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-image-button:hover {
+    background-color: #0056b3;
+}
+
+.swiper-button-prev, .swiper-button-next {
+    color: black;
+}
+
+
+.hero h2 {
+    font-size: 3em;
+    font-weight: 700;
+}
+
+.main-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+form label {
+    font-weight: bold;
+    color: #333;
+}
+
+form input, form select, form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100%;
+}
+
+form textarea {
+    resize: vertical;
+}
+
+form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    grid-column: span 2;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+.table-container {
+    max-width: 80%;
+    margin: 40px auto;
+    padding: 0 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.table-container h3 {
+    margin-bottom: 20px;
+    font-size: 1.8em;
+    color: #333;
+    font-weight: bold;
+}
+
+.tariff-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+thead, tbody, tr {
+    display: contents;
+}
+
+.content {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1em;
+    border: 1px solid #D6C9B9;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 1em;
+}
+
+td {
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 1em;
+}
+
+tr:nth-child(even) td {
+    background-color: #eef5ff;
+}
+
+tr:nth-child(odd) td {
+    background-color: #fff;
+}
+
+td:first-child {
+    font-weight: bold;
+    color: #2C3248;
+}
+
+.service-form {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.service-form th, .service-form td {
+    padding: 15px;
+    text-align: center;
+    font-size: 1em;
+    border: 1px solid #ddd;
+}
+
+.service-form th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.service-form tr {
+    display: table-row; /* Убедитесь, что строки отображаются как таблицы */
+}
+
+.service-form td {
+    display: table-cell; /* Убедитесь, что ячейки отображаются как таблицы */
+    color: #333;
+    font-size: 0.95em;
+}
+
+.service-form tr:nth-child(even) td {
+    background-color: #f4f4f4;
+}
+
+.service-form tr:nth-child(odd) td {
+    background-color: #ffffff;
+}
+
+footer {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer address a {
+    color: #dcdcdc;
+    text-decoration: none;
+}
+
+footer p {
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .table-container {
+        padding: 0 10px;
+    }
+
+    th, td {
+        padding: 8px;
+        font-size: 0.7em;
+    }
+}
+
+
+#preloader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#preloader.hidden {
+    display: none;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ddd;
+    border-top-color: #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+    text-align: center;
+}
+
+

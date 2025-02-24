@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавьте информацию об услуге</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="картинка.png" alt="Логотип BoxSpace">
+    </div>
+    <h1>BoxSpace</h1>
+    <nav>
+        <a href="index.html">Главная</a>
+        <a href="about.html">О нас</a>
+        <a href="services.html">Услуги</a>
+        <a href="contact.html">Контакты</a>
+        <a href="service-info.html">Добавить услугу</a>
+        <a href="reviews.html">Отзывы</a>
+    </nav>
+</header>
+
+<main>
+    <h1>Добавьте информацию об услуге</h1>
+    <form id="service-form">
+        <label for="service-name">Название услуги:</label>
+        <input type="text" id="service-name" required>
+
+        <label for="rental-period">Срок аренды (в днях):</label>
+        <input type="number" id="rental-period" min="1" required>
+
+        <label for="phone-number">Номер телефона:</label>
+        <input type="tel" id="phone-number" pattern="[0-9]{11}" required placeholder="Введите 11 цифр">
+
+        <label for="description">Описание:</label>
+        <textarea id="description" rows="3" required></textarea>
+
+        <button type="submit">Добавить услугу</button>
+        <button type="button" id="save-params">Сохранить параметры</button>
+        <button type="button" id="load-params">Загрузить параметры</button>
+    </form>
+
+    <div id="table-container">
+
+        <template id="row-template">
+            <tr>
+                <td class="service-name"></td>
+                <td class="rental-period"></td>
+                <td class="phone-number"></td>
+                <td class="description"></td>
+                <td><button class="delete-row">Удалить</button></td>
+            </tr>
+        </template>
+
+
+        <table class="service-form">
+            <thead>
+            <tr>
+                <th>Название услуги</th>
+                <th>Срок аренды (в днях)</th>
+                <th>Номер телефона</th>
+                <th>Описание</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+
+</main>
+
+<script src="service-info.js"></script>
+</body>
+</html>
