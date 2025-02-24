@@ -2,9 +2,12 @@
   "name": "m3312-vafaullin",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Albert Vafaullin <vafaullin.albert@mail.ru>",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "npm": "~1.0.20"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

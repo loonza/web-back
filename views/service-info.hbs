@@ -1,0 +1,13 @@
+{{!< layout}}
+<h1>Добавьте информацию об услуге</h1>
+<form id="service-form">
+  <label for="service-name">Название услуги:</label>
+  <input type="text" id="service-name" required>
+  <label for="rental-period">Срок аренды (в днях):</label>
+  <input type="number" id="rental-period" min="1" required>
+  <label for="phone-number">Номер телефона:</label>
+  <input type="tel" id="phone-number" pattern="[0-9]{11}" required placeholder="Введите 11 цифр">
+  <label for="description">Описание:</label>
+  <textarea id="description" rows="3" required></textarea>
+  <button type="submit">Добавить услугу</button>
+</form>
