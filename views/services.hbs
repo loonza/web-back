@@ -1,30 +1,33 @@
-{{!< layout}}
-<section class="table-container">
-  <h3>Тарифы на услуги</h3>
-  <table class="tariff-table">
-    <thead>
-    <tr>
-      <th>Услуга</th>
-      <th>Стоимость</th>
-      <th>Описание</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>Долгосрочное хранение</td>
-      <td>1000 руб/мес</td>
-      <td>Безопасное хранение вещей</td>
-    </tr>
-    <tr>
-      <td>Краткосрочное хранение</td>
-      <td>500 руб/неделя</td>
-      <td>Идеально для временного хранения вещей</td>
-    </tr>
-    <tr>
-      <td>Хранение документов</td>
-      <td>300 руб/мес</td>
-      <td>Оптимальные условия для архивации документов</td>
-    </tr>
-    </tbody>
-  </table>
-</section>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>Услуги</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+{{> header}}
+{{> navbar}}
+<main>
+  <section class="table-container">
+    <h3>Тарифы на услуги</h3>
+    <table class="tariff-table">
+      <thead>
+      <tr>
+        <th>Услуга</th>
+        <th>Стоимость</th>
+        <th>Описание</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Долгосрочное хранение</td>
+        <td>1000 руб/мес</td>
+        <td>Безопасное хранение вещей</td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+{{> footer}}
+</body>
+</html>
