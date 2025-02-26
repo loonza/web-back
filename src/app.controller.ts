@@ -9,7 +9,7 @@ export class AppController {
     if (!req.session.user) {
       return res.render('auth', { title: 'Авторизация' });
     } else {
-      return res.redirect('/home');
+      return res.redirect('/index');
     }
   }
 
@@ -34,7 +34,7 @@ export class AppController {
       return res.redirect('/auth'); // Если пустое поле, остаёмся на странице авторизации
     }
   }
-  @Get('/home')
+  @Get('/index')
   @Render('index')
   getHome(@Req() req: Request) {
     return {
