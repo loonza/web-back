@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const images = [
-        'фото1.png',
-        'фото2.png',
-        'фото3.png'
+        '/public/фото1.png',
+        '/public/фото2.png',
+        '/public/фото3.png'
     ];
 
     const addImageButton = document.getElementById('add-image');
