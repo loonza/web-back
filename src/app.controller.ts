@@ -9,6 +9,12 @@ export class AppController {
     return { title: 'Авторизация' };
   }
 
+  @Get('/auth')
+  @Render('auth')
+  getAuthPage() {
+    return { title: 'Авторизация' };
+  }
+
   @Get('/login')
   login(@Query('user') user: string, @Res() res: Response) {
     if (user) {
