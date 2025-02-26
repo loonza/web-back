@@ -55,7 +55,7 @@ nav a.active {
 }
 
 .hero {
-    background-image: url('фон.jpg');
+    background-image: url('/public/фон.jpg');
     background-size: cover;
     background-position: center;
     height: 60vh;
