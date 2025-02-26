@@ -1,108 +1,48 @@
-import { Controller, Get, Query, Render, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Query, Render, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller()
 export class AppController {
-  // При открытии сайта проверяем сессию, если нет user — показываем auth.hbs
   @Get('/')
-  checkAuth(@Req() req: Request, @Res() res: Response) {
-    if (!req.session.user) {
-      return res.render('auth', { title: 'Авторизация' });
-    } else {
-      return res.redirect('/index');
-    }
-  }
-
-  // Рендерим auth.hbs по прямой ссылке /auth
-  @Get('/auth')
-  @Render('auth')
-  getAuthPage() {
-    return { title: 'Авторизация' };
-  }
-
-  // Обрабатываем вход пользователя
-  @Get('/login')
-  login(
-    @Query('user') user: string,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
-    if (user) {
-      req.session.user = { name: user, authorized: true }; // Сохраняем user в сессии
-      return res.redirect('/home'); // Редирект на главную после входа
-    } else {
-      return res.redirect('/auth'); // Если пустое поле, остаёмся на странице авторизации
-    }
-  }
-  @Get('/index')
   @Render('index')
-  getHome(@Req() req: Request) {
-    return {
-      title: 'Главная страница',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      user: req.session.user ? req.session.user : null,
-    };
+  getLoginPage() {
+    return {};
   }
+
+  @Get('/login')
+  login(@Query('user') user: string, @Res() res: Response) {
+    if (user) {
+      res.redirect(`/inex?user=${encodeURIComponent(user)}`);
+    } else {
+      res.redirect('/');
+    }
+  }
+
+  @Get('/index')
+  @Render('index') // Главная после входа
+  getHome(@Query('user') user: string) {
+    return { title: 'Главная страница', user: user ? { name: user } : null };
+  }
+
   @Get('/about')
   @Render('about')
-  getAboutPage(@Req() req: Request) {
-    return {
-      title: 'О нас',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      user: req.session.user ? req.session.user : null,
-    };
+  getAnimals(@Query('user') user: string) {
+    return { title: 'О нас', user: user ? { name: user } : null };
   }
 
-  // Страница "Услуги"
   @Get('/services')
   @Render('services')
-  getServicesPage(@Req() req: Request) {
-    return {
-      title: 'Услуги',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      user: req.session.user ? req.session.user : null,
-    };
+  getServices(@Query('user') user: string) {
+    return { title: 'Услуги', user: user ? { name: user } : null };
   }
 
-  // Страница "Контакты"
-  @Get('/contact')
-  @Render('contact')
-  getContactPage(@Req() req: Request) {
-    return {
-      title: 'Контакты',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      user: req.session.user ? req.session.user : null,
-    };
+  @Get('/contacts')
+  @Render('contacts')
+  getContacts(@Query('user') user: string) {
+    return { title: 'Контакты', user: user ? { name: user } : null };
   }
-
-  // Страница "Отзывы"
-  @Get('/reviews')
-  @Render('reviews')
-  getReviewsPage(@Req() req: Request) {
-    return {
-      title: 'Отзывы',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      user: req.session.user ? req.session.user : null,
-    };
-  }
-
-  // Страница "Добавить услугу"
-  @Get('/service-info')
-  @Render('service-info')
-  getServiceInfoPage(@Req() req: Request) {
-    return {
-      title: 'Добавить услугу',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      user: req.session.user ? req.session.user : null,
-    };
-  }
-
-  // Выход из аккаунта (очистка сессии)
   @Get('/logout')
-  logout(@Req() req: Request, @Res() res: Response) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    req.session.destroy(() => {
-      res.redirect('/auth'); // После выхода редирект на авторизацию
-    });
+  logout(@Res() res: Response) {
+    res.redirect('/');
   }
 }
