@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 @Controller()
 export class AppController {
-  @Get('/')
+  @Get('/auth')
   @Render('auth')
   getLoginPage() {
     return { title: 'Авторизация' };

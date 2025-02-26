@@ -12,7 +12,6 @@ async function bootstrap() {
 
   app.enableCors();
 
-  // Настройка сессий
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(cookieParser());
   app.use(
@@ -33,7 +32,7 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
   const port = process.env.PORT || 3000;
