@@ -1,74 +1,61 @@
-import { Controller, Get, Render, Query, Res, Req } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Query, Render, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller()
 export class AppController {
   @Get('/')
-  checkAuth(@Req() req: Request, @Res() res: Response) {
-    if (!req.session.user) {
-      return res.render('auth', { title: 'Авторизация' });
-    }
-    return res.redirect('/home');
+  @Render('auth')
+  getLoginPage() {
+    return { title: 'Авторизация' };
   }
 
   @Get('/login')
-  login(@Query('user') user: string, @Req() req: Request, @Res() res: Response) {
+  login(@Query('user') user: string, @Res() res: Response) {
     if (user) {
-      req.session.user = { name: user, authorized: true };
-      res.redirect('/home');
+      res.redirect(`/home?user=${encodeURIComponent(user)}`);
     } else {
       res.redirect('/');
     }
   }
 
-  @Get('/logout')
-  logout(@Req() req: Request, @Res() res: Response) {
-    req.session.destroy(() => {
-      res.redirect('/');
-    });
-  }
-
   @Get('/home')
   @Render('index')
-  getHome(@Req() req: Request) {
-    if (!req.session.user) {
-      return { redirect: '/' };
-    }
-    return { title: 'Главная страница', user: req.session.user };
+  getHome(@Query('user') user: string) {
+    return { title: 'Главная страница', user: user ? { name: user } : null };
   }
 
   @Get('/about')
   @Render('about')
-  getAboutPage(@Req() req: Request) {
-    if (!req.session.user) return { redirect: '/' };
-    return { title: 'О нас' };
+  getAbout(@Query('user') user: string) {
+    return { title: 'О нас', user: user ? { name: user } : null };
   }
 
   @Get('/services')
   @Render('services')
-  getServicesPage(@Req() req: Request) {
-    if (!req.session.user) return { redirect: '/' };
-    return { title: 'Услуги' };
+  getServices(@Query('user') user: string) {
+    return { title: 'Услуги', user: user ? { name: user } : null };
   }
 
   @Get('/contact')
   @Render('contact')
-  getContactPage(@Req() req: Request) {
-    if (!req.session.user) return { redirect: '/' };
-    return { title: 'Контакты' };
+  getContact(@Query('user') user: string) {
+    return { title: 'Контакты', user: user ? { name: user } : null };
   }
 
   @Get('/reviews')
   @Render('reviews')
-  getReviewsPage(@Req() req: Request) {
-    if (!req.session.user) return { redirect: '/' };
-    return { title: 'Отзывы' };
+  getReviews(@Query('user') user: string) {
+    return { title: 'Отзывы', user: user ? { name: user } : null };
   }
 
   @Get('/service-info')
   @Render('service-info')
-  getServiceInfoPage(@Req() req: Request) {
-    if (!req.session.user) return { redirect: '/' };
-    return { title: 'Добавить услугу' };
+  getServiceInfo(@Query('user') user: string) {
+    return { title: 'Добавить услугу', user: user ? { name: user } : null };
+  }
+
+  @Get('/logout')
+  logout(@Res() res: Response) {
+    res.redirect('/');
   }
 }
