@@ -1,67 +1,108 @@
-import { Controller, Get, Query, Render, Res } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Get, Query, Render, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 @Controller()
 export class AppController {
-  @Get('/auth')
-  @Render('auth')
-  getLoginPage() {
-    return { title: 'Авторизация' };
+  // При открытии сайта проверяем сессию, если нет user — показываем auth.hbs
+  @Get('/')
+  checkAuth(@Req() req: Request, @Res() res: Response) {
+    if (!req.session.user) {
+      return res.render('auth', { title: 'Авторизация' });
+    } else {
+      return res.redirect('/home');
+    }
   }
 
+  // Рендерим auth.hbs по прямой ссылке /auth
   @Get('/auth')
   @Render('auth')
   getAuthPage() {
     return { title: 'Авторизация' };
   }
 
+  // Обрабатываем вход пользователя
   @Get('/login')
-  login(@Query('user') user: string, @Res() res: Response) {
+  login(
+    @Query('user') user: string,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     if (user) {
-      res.redirect(`/home?user=${encodeURIComponent(user)}`);
+      req.session.user = { name: user, authorized: true }; // Сохраняем user в сессии
+      return res.redirect('/home'); // Редирект на главную после входа
     } else {
-      res.redirect('/');
+      return res.redirect('/auth'); // Если пустое поле, остаёмся на странице авторизации
     }
   }
-
   @Get('/home')
   @Render('index')
-  getHome(@Query('user') user: string) {
-    return { title: 'Главная страница', user: user ? { name: user } : null };
+  getHome(@Req() req: Request) {
+    return {
+      title: 'Главная страница',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user ? req.session.user : null,
+    };
   }
-
   @Get('/about')
   @Render('about')
-  getAbout(@Query('user') user: string) {
-    return { title: 'О нас', user: user ? { name: user } : null };
+  getAboutPage(@Req() req: Request) {
+    return {
+      title: 'О нас',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user ? req.session.user : null,
+    };
   }
 
+  // Страница "Услуги"
   @Get('/services')
   @Render('services')
-  getServices(@Query('user') user: string) {
-    return { title: 'Услуги', user: user ? { name: user } : null };
+  getServicesPage(@Req() req: Request) {
+    return {
+      title: 'Услуги',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user ? req.session.user : null,
+    };
   }
 
+  // Страница "Контакты"
   @Get('/contact')
   @Render('contact')
-  getContact(@Query('user') user: string) {
-    return { title: 'Контакты', user: user ? { name: user } : null };
+  getContactPage(@Req() req: Request) {
+    return {
+      title: 'Контакты',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user ? req.session.user : null,
+    };
   }
 
+  // Страница "Отзывы"
   @Get('/reviews')
   @Render('reviews')
-  getReviews(@Query('user') user: string) {
-    return { title: 'Отзывы', user: user ? { name: user } : null };
+  getReviewsPage(@Req() req: Request) {
+    return {
+      title: 'Отзывы',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user ? req.session.user : null,
+    };
   }
 
+  // Страница "Добавить услугу"
   @Get('/service-info')
   @Render('service-info')
-  getServiceInfo(@Query('user') user: string) {
-    return { title: 'Добавить услугу', user: user ? { name: user } : null };
+  getServiceInfoPage(@Req() req: Request) {
+    return {
+      title: 'Добавить услугу',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user ? req.session.user : null,
+    };
   }
 
+  // Выход из аккаунта (очистка сессии)
   @Get('/logout')
-  logout(@Res() res: Response) {
-    res.redirect('/');
+  logout(@Req() req: Request, @Res() res: Response) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    req.session.destroy(() => {
+      res.redirect('/auth'); // После выхода редирект на авторизацию
+    });
   }
 }
