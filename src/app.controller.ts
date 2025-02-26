@@ -4,7 +4,7 @@ import { Response } from 'express';
 @Controller()
 export class AppController {
   @Get('/')
-  @Render('index')
+  @Render('/views/index')
   getLoginPage() {
     return {};
   }
@@ -18,30 +18,30 @@ export class AppController {
     }
   }
 
-  @Get('/index')
-  @Render('index') // Главная после входа
+  @Get('/views/index')
+  @Render('/views/index') // Главная после входа
   getHome(@Query('user') user: string) {
     return { title: 'Главная страница', user: user ? { name: user } : null };
   }
 
-  @Get('/about')
-  @Render('about')
+  @Get('/views/about')
+  @Render('/views/about')
   getAnimals(@Query('user') user: string) {
     return { title: 'О нас', user: user ? { name: user } : null };
   }
 
-  @Get('/services')
+  @Get('/views/services')
   @Render('services')
   getServices(@Query('user') user: string) {
     return { title: 'Услуги', user: user ? { name: user } : null };
   }
 
-  @Get('/contacts')
+  @Get('/views/contacts')
   @Render('contacts')
   getContacts(@Query('user') user: string) {
     return { title: 'Контакты', user: user ? { name: user } : null };
   }
-  @Get('/logout')
+  @Get('logout')
   logout(@Res() res: Response) {
     res.redirect('/');
   }
