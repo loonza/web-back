@@ -6,6 +6,13 @@ body {
     color: #333;
 }
 
+.user-info {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 15px;
+    color: #333;
+}
+
 header {
     background-color: #007bff;
     color: #fff;
@@ -132,7 +139,7 @@ nav a.active {
 .swiper {
     width: 80%;
     margin: 20px auto;
-    background-color: #ffffff; /* Цвет фона для слайдера */
+    background-color: #ffffff;
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -337,11 +344,11 @@ td:first-child {
 }
 
 .service-form tr {
-    display: table-row; /* Убедитесь, что строки отображаются как таблицы */
+    display: table-row;
 }
 
 .service-form td {
-    display: table-cell; /* Убедитесь, что ячейки отображаются как таблицы */
+    display: table-cell;
     color: #333;
     font-size: 0.95em;
 }

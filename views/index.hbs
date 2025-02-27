@@ -2,16 +2,19 @@
 <html lang="ru">
 <head>
   <title>Главная</title>
+  {{#if user}}
+    <p class="user-info">Вы вошли как <strong>{{user.name}}</strong></p>
+  {{/if}}
+
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-{{> header}}
-{{> nav}}
+
 <main>
   <section class="hero">
     <h2>Надежные решения для хранения ваших вещей</h2>
   </section>
 </main>
-{{> footer}}
+
 </body>
 </html>

@@ -1,11 +1,27 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Query, Render, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller()
 export class AppController {
   @Get('/')
+  @Render('auth')
+  getAuthPage() {
+    return { title: 'Авторизация', isAuthPage: true };
+  }
+
+  @Get('/login')
+  login(@Query('user') user: string, @Res() res: Response) {
+    if (user) {
+      res.redirect(`/home?user=${encodeURIComponent(user)}`);
+    } else {
+      res.redirect('/');
+    }
+  }
+
+  @Get('/home')
   @Render('index')
-  getHomePage() {
-    return { title: 'Главная' };
+  getHome(@Query('user') user: string) {
+    return { title: 'Главная страница', user: user ? { name: user } : null };
   }
 
   @Get('/about')

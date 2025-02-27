@@ -7,16 +7,16 @@ import * as hbs from 'hbs';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.enableCors();
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(` Server running at http://localhost:${port}`);
+  console.log(` Server is running on http://localhost:${port}`);
 }
 
 bootstrap();
