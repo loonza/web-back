@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://m3312_vafaullin_user:g0x4qxMmUhbd1bB1ylleUbMDbyUVysVs@dpg-cv7kipt2ng1s73fl8c30-a.frankfurt-postgres.render.com:5432/m3312_vafaullin?sslmode=require"
+}
+
+model payment {
+  id             Int                 @id @default(autoincrement())
+  reservation_id Int
+  amount         Decimal             @db.Decimal(10, 2)
+  status         payment_status_enum @default(pending)
+  paid_at        DateTime?           @db.Timestamp(6)
+}
+
+model reservation {
+  id          Int                     @id @default(autoincrement())
+  start_date  DateTime                @db.Timestamp(6)
+  end_date    DateTime                @db.Timestamp(6)
+  status      reservation_status_enum @default(pending)
+  userId      Int?
+  warehouseId Int?
+  warehouse   warehouse?              @relation(fields: [warehouseId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_02d0ebca0aafafe3a4a781dcfc4")
+  user        user?                   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_529dceb01ef681127fef04d755d")
+}
+
+model review {
+  id          Int        @id @default(autoincrement())
+  rating      Int
+  comment     String?
+  created_at  DateTime   @default(now()) @db.Timestamp(6)
+  userId      Int?
+  warehouseId Int?
+  user        user?      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_1337f93918c70837d3cea105d39")
+  warehouse   warehouse? @relation(fields: [warehouseId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_147fe8b8a49e4fe1e94c854636a")
+}
+
+model user {
+  id          Int            @id @default(autoincrement())
+  username    String         @unique  @db.VarChar
+  password    String         @db.VarChar
+  email       String         @unique  @db.VarChar
+  role        user_role_enum
+  created_at  DateTime       @default(now()) @db.Timestamp(6)
+  reservation reservation[]
+  review      review[]
+}
+
+model warehouse {
+  id          Int           @id @default(autoincrement())
+  location    String        @db.VarChar
+  capacity    Int
+  price       Decimal       @db.Decimal(10, 2)
+  description String?
+  reservation reservation[]
+  review      review[]
+}
+
+enum payment_status_enum {
+  pending
+  paid
+  failed
+}
+
+enum reservation_status_enum {
+  pending
+  confirmed
+  canceled
+}
+
+enum user_role_enum {
+  tenant
+  owner
+}
