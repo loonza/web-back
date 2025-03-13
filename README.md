@@ -4,7 +4,7 @@
 - Website - [https://m3312-vafaullin.onrender.com](https://m3312-vafaullin.onrender.com)
 - Group - [M3312]
 
-![ER](https://github.com/user-attachments/assets/2a0309da-97eb-44bc-86ce-ae6182922ed7)
+![ER](ER.jpeg)
 
 USER : 
 
