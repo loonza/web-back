@@ -10,7 +10,11 @@ export class AppController {
   }
 
   @Get('/login')
-  login(@Query('user') user: string, @Res() res: Response, @Req() req: Request) {
+  login(
+    @Query('user') user: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
     if (user) {
       req.session.user = user;
       res.redirect('/');
