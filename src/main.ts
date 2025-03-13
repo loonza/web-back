@@ -3,16 +3,27 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as hbs from 'hbs';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors();
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  app.use(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    session({
+      secret: 'loonza',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { secure: false },
+    }),
+  );
+  app.useStaticAssets(join(process.cwd(), 'public'));
+  app.setBaseViewsDir(join(process.cwd(), 'views'));
   app.setViewEngine('hbs');
 
-  hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
+  hbs.registerPartials(join(process.cwd(), 'views', 'partials'));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

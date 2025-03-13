@@ -4,4 +4,15 @@
   </div>
   <h1>BoxSpace</h1>
   {{> nav}}
+  <div class="auth-section">
+    {{#if user}}
+      <span class="user-name">Вы вошли как: <strong>{{user}}</strong></span>
+      <a href="/logout" class="logout-btn">Выйти</a>
+    {{else}}
+      <form action="/login" method="GET" class="auth-form">
+        <input type="text" name="user" placeholder="Введите имя" required>
+        <button type="submit">Войти</button>
+      </form>
+    {{/if}}
+  </div>
 </header>
