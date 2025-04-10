@@ -1,0 +1,25 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+<div class="profile-container">
+  <h2>Профиль пользователя</h2>
+  <p><strong>Имя:</strong> {{user.username}}</p>
+
+  <form method="POST" action="/user/update-password" class="profile-form">
+    <input type="password" name="password" placeholder="Новый пароль" class="input-centered" required>
+    <button type="submit" class="btn-primary">Обновить пароль</button>
+  </form>
+
+  <form method="POST" action="/user/delete" class="profile-form">
+    <button type="submit" class="btn-danger">Удалить аккаунт</button>
+  </form>
+
+
+  <div class="profile-nav">
+    <a href="/">На главную</a>
+    <a href="/logout">Выйти</a>
+  </div>
+</div>
+
+

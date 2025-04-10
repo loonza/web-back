@@ -250,6 +250,37 @@ form button:hover {
     border-radius: 10px;
 }
 
+.tariff-table2 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.tariff-table3 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.tariff-table4 {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0px;
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+
 thead, tbody, tr {
     display: contents;
 }
@@ -395,6 +426,90 @@ footer p {
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
+
+.input-centered {
+    display: block;
+    margin: 0 auto 10px auto;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+
+.profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+
+.profile-form {
+    margin-bottom: 20px;
+}
+
+.profile-form input {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+
+.btn-danger {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn-danger:hover {
+    background-color: #cc0000;
+}
+
+
+.profile-nav {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.profile-nav a {
+    margin: 0 10px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.profile-nav a:hover {
+    text-decoration: underline;
+}
+
+
+
+
 
 @keyframes spin {
     0% {

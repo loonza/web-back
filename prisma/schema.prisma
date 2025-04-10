@@ -4,11 +4,11 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://m3312_vafaullin_user:g0x4qxMmUhbd1bB1ylleUbMDbyUVysVs@dpg-cv7kipt2ng1s73fl8c30-a.frankfurt-postgres.render.com:5432/m3312_vafaullin?sslmode=require"
+  url      = env("DATABASE_URL")
 }
 
 model payment {
-  id             Int                 @id @default(autoincrement())
+  id          String         @id @default(uuid())
   reservation_id Int
   amount         Decimal             @db.Decimal(10, 2)
   status         payment_status_enum @default(pending)
@@ -20,10 +20,10 @@ model reservation {
   start_date  DateTime                @db.Timestamp(6)
   end_date    DateTime                @db.Timestamp(6)
   status      reservation_status_enum @default(pending)
-  userId      Int?
-  warehouseId Int?
-  warehouse   warehouse?              @relation(fields: [warehouseId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  user        user?                   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_id      String?
+  warehouse_id String?
+  user        user?                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  warehouse   warehouse?              @relation(fields: [warehouse_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model review {
@@ -31,17 +31,17 @@ model review {
   rating      Int
   comment     String?
   created_at  DateTime   @default(now()) @db.Timestamp(6)
-  userId      Int?
-  warehouseId Int?
-  user        user?      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  warehouse   warehouse? @relation(fields: [warehouseId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  user_id      String?
+  warehouse_id String?
+  user        user?      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  warehouse   warehouse? @relation(fields: [warehouse_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model user {
-  id          Int            @id @default(autoincrement())
-  username    String         @unique  @db.VarChar
+  id          String         @id @default(uuid())
+  username    String         @unique @db.VarChar
   password    String         @db.VarChar
-  email       String         @unique  @db.VarChar
+  email       String         @unique @db.VarChar
   role        user_role_enum
   created_at  DateTime       @default(now()) @db.Timestamp(6)
   reservation reservation[]
@@ -49,7 +49,7 @@ model user {
 }
 
 model warehouse {
-  id          Int           @id @default(autoincrement())
+  id          String         @id @default(uuid())
   location    String        @db.VarChar
   capacity    Int
   price       Decimal       @db.Decimal(10, 2)

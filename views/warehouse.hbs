@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Склады</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+{{#if isAdmin}}
+  <main>
+    <section class="table-container">
+      <h3>Список складов</h3>
+
+      <form id="createWarehouseForm" method="POST" action="/warehouse/create" style="margin-bottom: 20px;">
+      <input type="text" name="location" placeholder="Местоположение" required>
+        <input type="number" name="capacity" placeholder="Вместимость" required>
+        <input type="number" step="0.01" name="price" placeholder="Цена" required>
+        <input type="text" name="description" placeholder="Описание">
+        <button type="submit">Создать склад</button>
+      </form>
+
+      <form method="GET" action="/warehouse/search" style="margin-bottom: 20px;">
+        <input type="text" name="location" placeholder="Введите местоположение склада">
+        <button type="submit">Поиск</button>
+      </form>
+
+      <table class="tariff-table3">
+        <thead>
+        <tr>
+          <th>Местоположение</th>
+          <th>Вместимость</th>
+          <th>Цена</th>
+          <th>Описание</th>
+          <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each warehouses}}
+          <tr>
+            <td>{{this.location}}</td>
+            <td>{{this.capacity}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.description}}</td>
+            <td>
+              <form method="POST" action="/warehouse/{{this.id}}/delete">
+                <button type="submit" class="btn-danger">Удалить</button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </section>
+  </main>
+{{/if}}
+
+{{#if (or isUser (not user))}}
+  <main>
+    <section class="table-container">
+      <h3>Список складов</h3>
+      <form method="GET" action="/warehouse/search" style="margin-bottom: 20px;">
+        <input type="text" name="location" placeholder="Введите местоположение склада">
+        <button type="submit">Поиск</button>
+      </form>
+
+      <table class="tariff-table3">
+        <thead>
+        <tr>
+          <th>Местоположение</th>
+          <th>Вместимость</th>
+          <th>Цена</th>
+          <th>Описание</th>
+          <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each warehouses}}
+          <tr>
+            <td>{{this.location}}</td>
+            <td>{{this.capacity}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.description}}</td>
+            <td>
+              <form method="POST" action="/reservation/create">
+                <input type="hidden" name="warehouseId" value="{{this.id}}">
+                <input type="number" name="months" min="1" required>
+                <button type="submit">Зарезервировать</button>
+              </form>
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </section>
+  </main>
+{{/if}}
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+  const eventSource = new EventSource('/warehouse/events');
+  eventSource.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    Toastify(`Добавлен склад: ${data.location}`);
+  };
+
+
+
+  const form = document.getElementById('createWarehouseForm');
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const payload = new URLSearchParams(formData);
+
+    const response = await fetch('/warehouse/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: payload
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      alert(`Склад "${data.location}" успешно создан`);
+      form.reset();
+    } else {
+      const error = await response.json();
+      alert(error.message || 'Ошибка при создании склада');
+    }
+
+  });
+</script>
+
+
+</body>
+</html>
+

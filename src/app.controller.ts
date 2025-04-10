@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Render, Req, Res } from '@nestjs/common';
+import { Controller, Get, Render, Req, Res } from '@nestjs/common';
 import { Response, Request } from 'express';
 
 @Controller()
@@ -10,17 +10,9 @@ export class AppController {
   }
 
   @Get('/login')
-  login(
-    @Query('user') user: string,
-    @Res() res: Response,
-    @Req() req: Request,
-  ) {
-    if (user) {
-      req.session.user = user;
-      res.redirect('/');
-    } else {
-      res.redirect('/');
-    }
+  @Render('login') // или как ты назвал шаблон
+  getLoginForm(@Req() req: Request) {
+    return { title: 'Вход', user: req.session.user || null };
   }
 
   @Get('/logout')
@@ -58,5 +50,10 @@ export class AppController {
   @Render('reviews')
   getReviewsPage(@Req() req: Request) {
     return { title: 'Отзывы', user: req.session.user || null };
+  }
+  @Get('/reservations')
+  @Render('reservations')
+  getReservationPage(@Req() req: Request) {
+    return { title: 'Мои брони', user: req.session.user || null };
   }
 }
