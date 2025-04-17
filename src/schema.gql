@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Reservation {
+  id: Int!
+  start_date: DateTime!
+  end_date: DateTime!
+  status: String!
+  user_id: String
+  warehouse_id: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  reservations(userId: String!): [Reservation!]!
+}
+
+type Mutation {
+  createReservation(userId: String!, createReservationInput: CreateReservationDto!): Reservation!
+  updateReservation(id: Int!, updateReservationInput: UpdateReservationDto!): Reservation!
+  removeReservation(id: Int!): Reservation!
+}
+
+input CreateReservationDto {
+  warehouseId: String!
+  months: Int!
+}
+
+input UpdateReservationDto {
+  status: String
+}

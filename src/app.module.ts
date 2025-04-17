@@ -9,9 +9,17 @@ import { WarehouseModule } from './warehouse/warehouse.module';
 import { PaymentModule } from './payment/payment.module';
 import { ReviewModule } from './review/review.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      playground: true,
+      sortSchema: true,
+    }),
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,

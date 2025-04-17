@@ -42,10 +42,17 @@ export class UserService {
   }
 
   async updatePassword(id: string, dto: UpdateUserDto) {
-    return this.prisma.user.update({
-      where: { id },
-      data: { password: dto.password },
-    });
+    try {
+      return await this.prisma.user.update({
+        where: { id },
+        data: { password: dto.password },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new NotFoundException(
+        'Неверный ID пользователя — обновление невозможно',
+      );
+    }
   }
 
   async findByUsername(username: string) {
@@ -55,7 +62,14 @@ export class UserService {
   }
 
   async removeById(id: string) {
-    return this.prisma.user.delete({ where: { id } });
+    try {
+      return await this.prisma.user.delete({ where: { id } });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new NotFoundException(
+        'Неверный ID пользователя — удаление невозможно',
+      );
+    }
   }
 
   async findAllPaginated(page: number, limit: number) {

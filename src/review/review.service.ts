@@ -28,7 +28,7 @@ export class ReviewService {
       throw new NotFoundException(`У пользователя нет брони`);
     }
 
-    await this.prisma.review.create({
+    const review = await this.prisma.review.create({
       data: {
         rating: Number(dto.rating),
         comment: dto.comment,
@@ -36,6 +36,19 @@ export class ReviewService {
         warehouse_id: lastReservation.warehouse_id,
       },
     });
+    return review;
+  }
+
+  async findOne(id: number) {
+    const review = await this.prisma.review.findUnique({
+      where: { id },
+    });
+
+    if (!review) {
+      throw new NotFoundException(`Отзыв с ID ${id} не найден`);
+    }
+
+    return review;
   }
 
   async remove(id: number) {

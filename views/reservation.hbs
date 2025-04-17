@@ -27,21 +27,21 @@
       {{#each reservations}}
         <tr>
           <td>{{this.warehouse.location}}</td>
-          <td>{{this.start_date}}</td>
-          <td>{{this.end_date}}</td>
+          <td>{{formatDate this.start_date}}</td>
+          <td>{{formatDate this.end_date}}</td>
           <td>{{this.status}}</td>
           <td>
             {{#if (eq this.status "pending")}}
               <form method="POST" action="/payment/pay">
                 <input type="hidden" name="reservationId" value="{{this.id}}">
-                <input type="number" name="months" placeholder="Месяцев" min="1" required>
                 <button type="submit" class="btn-primary">Оплатить</button>
               </form>
             {{/if}}
-
-            <form method="POST" action="/reservation/{{this.id}}/delete">
-              <button type="submit" class="btn-danger">Отменить</button>
-            </form>
+            {{#unless (eq this.status "confirmed")}}
+              <form method="POST" action="/reservation/{{this.id}}/delete">
+                <button type="submit" class="btn-danger">Отменить</button>
+              </form>
+            {{/unless}}
           </td>
         </tr>
       {{/each}}

@@ -8,6 +8,7 @@ import {
   Query,
   ParseIntPipe,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { WarehouseService } from './warehouse.service';
 import { CreateWarehouseDto } from './dto/create-warehouse.dto';
@@ -24,7 +25,7 @@ import {
 export class WarehouseApiController {
   constructor(private readonly warehouseService: WarehouseService) {}
 
-  @Get('search')
+  @Get('')
   @ApiOperation({ summary: 'Получить все склады с пагинацией' })
   @ApiResponse({ status: 200, description: 'Список складов получен' })
   async findAll(
@@ -66,25 +67,41 @@ export class WarehouseApiController {
   async search(@Param('location') location: string) {
     const warehouse = await this.warehouseService.search(location);
     if (!warehouse) throw new NotFoundException('Склад не найден');
+    if (!location || location.trim() === '') {
+      throw new BadRequestException('Локация не может быть пустой строкой');
+    }
     return warehouse;
   }
 
-  @Post('create')
+  @Post()
   @ApiOperation({ summary: 'Создать новый склад' })
-  @ApiBody({ type: CreateWarehouseDto })
   @ApiResponse({ status: 201, description: 'Склад создан' })
+  @ApiResponse({ status: 400, description: 'Ошибка валидации' })
+  @ApiBody({ type: CreateWarehouseDto })
   async create(@Body() dto: CreateWarehouseDto) {
-    return this.warehouseService.create(dto);
+    try {
+      return await this.warehouseService.create(dto);
+    } catch (error) {
+      throw new BadRequestException(
+        error.message || 'Ошибка при создании склада',
+      );
+    }
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   @ApiOperation({ summary: 'Удалить склад' })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Склад удалён' })
   @ApiResponse({ status: 404, description: 'Склад не найден' })
   async remove(@Param('id') id: string) {
-    const result = await this.warehouseService.remove(id);
-    if (!result) throw new NotFoundException('Склад не найден');
-    return { message: 'Склад успешно удален' };
+    try {
+      const result = await this.warehouseService.remove(id);
+      if (!result) throw new NotFoundException('Склад не найден');
+      return { message: 'Склад успешно удален' };
+    } catch (error) {
+      throw new BadRequestException(
+        error.message || 'Невверно введен id склада',
+      );
+    }
   }
 }

@@ -31,7 +31,7 @@
             <td>{{this.user.username}}</td>
             <td>{{this.rating}}</td>
             <td>{{this.comment}}</td>
-            <td>{{this.created_at}}</td>
+            <td>{{formatDate this.created_at}}</td>
             <td>
                   <form method="POST" action="/review/{{this.id}}/delete">
                     <button type="submit" class="btn-danger">Удалить</button>
@@ -51,6 +51,7 @@
 
 {{#if (or isUser (not user))}}
   <main>
+
     <section class="table-container">
 
       <form method="POST" action="/review/create">
@@ -80,7 +81,7 @@
               <td>{{this.user.username}}</td>
               <td>{{this.rating}}</td>
               <td>{{this.comment}}</td>
-              <td>{{this.created_at}}</td>
+              <td>{{formatDate this.created_at}}</td>
             </tr>
           {{/each}}
           </tbody>

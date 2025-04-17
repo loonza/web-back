@@ -4,10 +4,11 @@ import { ReviewController } from './review.controller';
 import { PrismaModule } from '../prisma.module';
 import { PrismaService } from '../prisma.service';
 import { WarehouseModule } from '../warehouse/warehouse.module';
+import { ReviewResolver } from './review.resolver';
 
 @Module({
   imports: [PrismaModule, WarehouseModule],
   controllers: [ReviewController],
-  providers: [ReviewService, PrismaService],
+  providers: [ReviewService, PrismaService, ReviewResolver],
 })
 export class ReviewModule {}

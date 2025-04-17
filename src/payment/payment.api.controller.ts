@@ -3,8 +3,7 @@ import {
   Post,
   Body,
   Delete,
-  Param,
-  ParseIntPipe,
+  NotFoundException,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
@@ -12,7 +11,6 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
 
@@ -21,7 +19,7 @@ import {
 export class PaymentApiController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post('create')
+  @Post('')
   @ApiOperation({ summary: 'Создание оплаты' })
   @ApiBody({ type: CreatePaymentDto })
   @ApiResponse({ status: 201, description: 'Оплата успешно создана' })
@@ -30,16 +28,29 @@ export class PaymentApiController {
     description: 'Бронь не найдена или склад отсутствует',
   })
   async create(@Body() dto: CreatePaymentDto) {
-    return this.paymentService.create(dto);
+    const reservation = await this.paymentService.findReservation(dto);
+
+    if (!reservation) {
+      throw new NotFoundException('Бронь не найдена');
+    }
+    const months = this.paymentService.calculateMonthsBetween(reservation);
+
+    return this.paymentService.create(dto, months);
   }
 
-  @Delete('delete/:reservationId')
+  @Delete(':reservationId')
   @ApiOperation({ summary: 'Удаление оплаты по ID брони' })
-  @ApiParam({ name: 'reservationId', type: Number })
-  @ApiResponse({ status: 204, description: 'Оплата успешно удалена' })
-  async removeByReservation(
-    @Param('reservationId', ParseIntPipe) reservationId: number,
-  ) {
-    return this.paymentService.remove(reservationId);
+  @ApiBody({ type: CreatePaymentDto })
+  @ApiResponse({ status: 200, description: 'Оплата успешно удалена' })
+  @ApiResponse({ status: 404, description: 'Оплата не найдена' })
+  @ApiResponse({ status: 400, description: 'Неверный формат данных' })
+  async removeByReservation(@Body() dto: CreatePaymentDto) {
+    const payment = await this.paymentService.findReservation(dto);
+    if (!payment) {
+      throw new NotFoundException('Оплата по данной брони не найдена');
+    }
+
+    await this.paymentService.remove(dto.reservationId);
+    return { message: 'Оплата удалена' };
   }
 }

@@ -14,7 +14,7 @@ import {
 export class ReviewApiController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Post('create/:userId')
+  @Post(':userId')
   @ApiOperation({ summary: 'Создать отзыв' })
   @ApiParam({ name: 'userId', type: 'string', description: 'ID пользователя' })
   @ApiBody({ type: CreateReviewDto })
@@ -31,7 +31,7 @@ export class ReviewApiController {
     return this.reviewService.findAll();
   }
 
-  @Delete('delete/:id')
+  @Delete(':id')
   @ApiOperation({ summary: 'Удалить отзыв' })
   @ApiParam({ name: 'id', type: 'string', description: 'ID отзыва' })
   @ApiResponse({ status: 200, description: 'Отзыв удалён' })

@@ -3,7 +3,9 @@ import { ReviewService } from './review.service';
 import { Request, Response } from 'express';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { PrismaService } from '../prisma.service';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('review')
 export class ReviewController {
   constructor(

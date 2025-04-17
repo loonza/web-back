@@ -14,7 +14,9 @@ import { Response, Request } from 'express';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { fromEvent, map, Observable } from 'rxjs';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('user')
 export class UserController {
   constructor(

@@ -15,7 +15,9 @@ import { CreateWarehouseDto } from './dto/create-warehouse.dto';
 import { Request, Response } from 'express';
 import { Observable, fromEvent, map } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('warehouse')
 export class WarehouseController {
   constructor(

@@ -23,8 +23,8 @@ export class WarehouseService {
         },
       },
     });
-    if (!warehouse) {
-      throw new NotFoundException(`Склад с id ${location} не найден`);
+    if (warehouse.length === 0) {
+      throw new NotFoundException('Склады с такой локацией не найдены');
     }
     return warehouse;
   }
@@ -34,7 +34,23 @@ export class WarehouseService {
   }
 
   async remove(id: string) {
+    const warehouse = await this.prisma.warehouse.findUnique({ where: { id } });
+
+    if (!warehouse) {
+      throw new NotFoundException('Укажите правильный ID склада');
+    }
+
     return this.prisma.warehouse.delete({ where: { id } });
+  }
+
+  async findOne(id: string) {
+    const warehouse = await this.prisma.warehouse.findUnique({ where: { id } });
+
+    if (!warehouse) {
+      throw new NotFoundException(`Склад с id ${id} не найден`);
+    }
+
+    return warehouse;
   }
 
   async findAllPaginated(page: number, limit: number) {
