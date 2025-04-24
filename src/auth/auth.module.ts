@@ -21,8 +21,9 @@ export class AuthModule {
     supertokens.init({
       framework: 'express',
       supertokens: {
-        connectionURI: config.connectionURI,
-        apiKey: config.apiKey,
+        connectionURI:
+          'https://st-dev-20e31280-2020-11f0-9a56-ef0e94efae55.aws.supertokens.io',
+        apiKey: 'G4Ebm20VyxsAfHTLe4vQy9ZKV4',
       },
       appInfo: {
         ...config.appInfo,
