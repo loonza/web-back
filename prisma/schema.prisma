@@ -9,10 +9,11 @@ datasource db {
 
 model payment {
   id          String         @id @default(uuid())
-  reservation_id Int
+  reservation_id Int @unique
   amount         Decimal             @db.Decimal(10, 2)
   status         payment_status_enum @default(pending)
   paid_at        DateTime?           @db.Timestamp(6)
+
 }
 
 model reservation {
@@ -24,6 +25,7 @@ model reservation {
   warehouse_id String?
   user        user?                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   warehouse   warehouse?              @relation(fields: [warehouse_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
 }
 
 model review {

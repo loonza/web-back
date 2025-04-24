@@ -8,7 +8,7 @@ import {
   NotFoundException,
   UsePipes,
   ValidationPipe,
-  BadRequestException,
+  BadRequestException, UseGuards,
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -19,8 +19,10 @@ import {
   ApiParam,
   ApiBody,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('reservation')
+@UseGuards(AuthGuard)
 @Controller('api/reservation')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class ReservationApiController {
@@ -31,6 +33,10 @@ export class ReservationApiController {
   @ApiParam({ name: 'userId', type: String, description: 'ID пользователя' })
   @ApiBody({ type: CreateReservationDto })
   @ApiResponse({ status: 201, description: 'Бронирование создано' })
+  @ApiResponse({
+    status: 404,
+    description: 'Ошибка создания, проверьте вводиммые данные',
+  })
   async create(
     @Param('userId') userId: string,
     @Body() dto: CreateReservationDto,
@@ -59,7 +65,7 @@ export class ReservationApiController {
     status: 200,
     description: 'Список бронирований с привязкой к складам',
   })
-  @ApiResponse({ status: 400, description: 'Бронирование не найдено' })
+  @ApiResponse({ status: 404, description: 'Бронирование не найдено' })
   async findAll(@Param('userId') userId: string) {
     const reservations = await this.reservationService.findAll(userId);
     if (!reservations || reservations.length === 0) {

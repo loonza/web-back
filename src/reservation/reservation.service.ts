@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { PrismaService } from '../prisma.service';
+import { Reservation } from './entities/reservation.entity';
 
 @Injectable()
 export class ReservationService {
@@ -36,5 +37,25 @@ export class ReservationService {
 
   update(id: number, dto: UpdateReservationDto) {
     return this.prisma.reservation.update({ where: { id }, data: dto });
+  }
+
+  async findById(id: number): Promise<Reservation | null> {
+    return this.prisma.reservation.findUnique({
+      where: { id },
+    });
+  }
+  async findAlls(): Promise<Reservation[]> {
+    return this.prisma.reservation.findMany();
+  }
+  async findByUserId(userId: string): Promise<Reservation[]> {
+    const reservations = await this.prisma.reservation.findMany({
+      where: { user_id: userId },
+    });
+
+    if (!reservations || reservations.length === 0) {
+      throw new NotFoundException('Резервации для пользователя не найдены');
+    }
+
+    return reservations;
   }
 }

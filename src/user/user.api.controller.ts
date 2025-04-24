@@ -7,41 +7,55 @@ import {
   Param,
   Body,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { user_role_enum } from '@prisma/client';
+import { Roles } from 'src/auth/public.decorator';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBody,
   ApiParam,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('user')
+@UseGuards(AuthGuard)
 @Controller('api/user')
 export class UserApiController {
   constructor(private userService: UserService) {}
 
   @Post('')
   @ApiOperation({ summary: 'Создание пользователя' })
-  @ApiResponse({ status: 201 })
+  @ApiResponse({ status: 201, description: 'Пользователь создан' })
   @ApiBody({ type: CreateUserDto })
   create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Получить пользователя по ID' })
+  @Get(':username')
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
+  @ApiOperation({ summary: 'Получить пользователя по Username' })
+  @ApiResponse({ status: 404, description: 'Пользователь не найден' })
+  @ApiResponse({ status: 200, description: 'Пользователь найден' })
   @ApiParam({ name: 'username', type: String })
-  async findOne(@Param('username') id: string) {
-    return this.userService.findByUsername(id);
+  async findOne(@Param('username') username: string) {
+    return this.userService.findByUsername(username);
   }
 
   @Get('')
-  @ApiOperation({ summary: 'Получить всех пользователей' })
-  findAll() {
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
+  @ApiOperation({ summary: 'Получить всех пользователей (только для админа)' })
+  @ApiResponse({ status: 200, description: 'Список пользователей' })
+  @ApiResponse({ status: 403, description: 'Нет доступа' })
+  async findAll() {
     return this.userService.findAllUsers();
   }
 

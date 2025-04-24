@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import {
@@ -7,9 +15,14 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
+import { Roles } from '../auth/public.decorator';
+import { user_role_enum } from '@prisma/client';
 
 @ApiTags('review')
+@UseGuards(AuthGuard)
 @Controller('api/review')
 export class ReviewApiController {
   constructor(private readonly reviewService: ReviewService) {}
@@ -32,6 +45,8 @@ export class ReviewApiController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
   @ApiOperation({ summary: 'Удалить отзыв' })
   @ApiParam({ name: 'id', type: 'string', description: 'ID отзыва' })
   @ApiResponse({ status: 200, description: 'Отзыв удалён' })

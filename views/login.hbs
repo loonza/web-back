@@ -1,5 +1,8 @@
 <form method="POST" action="/user/login">
-  <input type="text" name="username" placeholder="Имя" required />
+  <input type="text" name="email" placeholder="Почта" required />
   <input type="password" name="password" placeholder="Пароль" required />
   <button type="submit">Войти</button>
+  {{#if error}}
+    <p style="color: red;">{{error}}</p>
+  {{/if}}
 </form>

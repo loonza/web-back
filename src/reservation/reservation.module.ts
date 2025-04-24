@@ -5,9 +5,10 @@ import { PrismaModule } from '../prisma.module';
 import { WarehouseModule } from '../warehouse/warehouse.module';
 import { ReservationApiController } from './reservation.api.controller';
 import { ReservationResolver } from './reservation.resolver';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [PrismaModule, WarehouseModule],
+  imports: [PrismaModule, WarehouseModule, UserModule],
   controllers: [ReservationController, ReservationApiController],
   providers: [ReservationService, ReservationResolver],
   exports: [ReservationService],

@@ -17,6 +17,7 @@ export class UserService {
     }
     return this.prisma.user.create({
       data: {
+        id: createUserDto.id,
         username: createUserDto.username,
         email: createUserDto.email,
         password: createUserDto.password,
@@ -25,8 +26,14 @@ export class UserService {
     });
   }
 
-  async findById(username: string) {
-    return this.prisma.user.findUnique({ where: { username } });
+  async findById(id: string) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+    });
   }
 
   async findAllUsers() {
@@ -34,7 +41,7 @@ export class UserService {
   }
 
   async validateUser(id: string, username: string, password: string) {
-    const user = await this.findById(username);
+    const user = await this.findByUsername(username);
     if (user && user.password === password) {
       return user;
     }

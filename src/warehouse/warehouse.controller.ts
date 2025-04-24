@@ -66,8 +66,13 @@ export class WarehouseController {
       });
     } catch (error) {
       if (error instanceof NotFoundException) {
-        return res.status(404).render('errors/not-found', {
+        const warehouses = await this.warehouseService.findAll();
+        return res.status(404).render('warehouse', {
           message: error.message,
+          warehouses,
+          user: req.session.user,
+          isAdmin: req.session.user?.role === 'owner',
+          isUser: req.session.user?.role == 'tenant',
         });
       }
       throw error;
@@ -81,7 +86,7 @@ export class WarehouseController {
     @Res() res: Response,
   ) {
     if (!req.session.user || req.session.user.role !== 'owner') {
-      return res.status(403).send('Нет доступа');
+      return res.status(403).send('{"message":"Нет доступа"}');
     }
     dto.capacity = Number(dto.capacity);
     dto.price = Number(dto.price);
@@ -91,11 +96,7 @@ export class WarehouseController {
   }
 
   @Post(':id/delete')
-  async delete(
-    @Param('id') id: string,
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async delete(@Param('id') id: string, @Res() res: Response) {
     await this.warehouseService.remove(id);
     res.redirect('/warehouse');
   }

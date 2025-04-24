@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID, Float } from '@nestjs/graphql';
+import { Reservation } from '../../reservation/entities/reservation.entity';
 
 @ObjectType()
 export class Payment {
@@ -16,4 +17,7 @@ export class Payment {
 
   @Field(() => Date, { nullable: true })
   paid_at: Date | null;
+
+  @Field({ nullable: true })
+  elapsedTime?: string;
 }

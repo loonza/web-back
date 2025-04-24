@@ -6,8 +6,11 @@ export class CreateReservationDto {
   @ApiProperty()
   @IsUUID()
   warehouseId: string;
+
   startDate: string;
+
   endDate: string;
+
   @ApiProperty()
   @IsNumber()
   @Type(() => Number)

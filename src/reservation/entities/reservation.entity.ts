@@ -1,4 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { User } from '../../user/entities/user.entity';
+import { Warehouse } from '../../warehouse/entities/warehouse.entity';
 
 @ObjectType()
 export class Reservation {
@@ -14,9 +16,18 @@ export class Reservation {
   @Field()
   status: string;
 
-  @Field({ nullable: true })
-  user_id?: string;
+  @Field(() => String, { nullable: true })
+  user_id?: string | null;
+
+  @Field(() => String, { nullable: true })
+  warehouse_id?: string | null;
+
+  @Field(() => User, { nullable: true })
+  user?: User;
+
+  @Field(() => Warehouse, { nullable: true })
+  warehouse?: Warehouse;
 
   @Field({ nullable: true })
-  warehouse_id?: string;
+  elapsedTime?: string;
 }

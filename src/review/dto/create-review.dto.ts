@@ -7,6 +7,7 @@ export class CreateReviewDto {
   @IsNumber()
   @Type(() => Number)
   rating: number;
+
   @ApiProperty()
   @IsString()
   comment?: string;

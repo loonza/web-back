@@ -10,12 +10,12 @@ export class WarehouseResolver {
   constructor(private readonly warehouseService: WarehouseService) {}
 
   @Query(() => [Warehouse], { name: 'warehouse' })
-  async getAllWarehouses() {
+  async viewAllWarehouses() {
     return this.warehouseService.findAll();
   }
 
   @Query(() => Warehouse, { name: 'searchWarehouses' })
-  async getWarehouseById(
+  async findWarehouseById(
     @Args('location', { type: () => String }) location: string,
   ) {
     const warehouses = await this.warehouseService.search(location);
@@ -26,7 +26,7 @@ export class WarehouseResolver {
   }
 
   @Mutation(() => Warehouse)
-  async createWarehouse(
+  async addWarehouse(
     @Args('createWarehouseInput') CreateWarehouseInput: CreateWarehouseInput,
   ) {
     return this.warehouseService.create(
@@ -35,7 +35,7 @@ export class WarehouseResolver {
   }
 
   @Mutation(() => Boolean)
-  async removeWarehouse(@Args('id', { type: () => String }) id: string) {
+  async deleteWarehouse(@Args('id', { type: () => String }) id: string) {
     const existing = await this.warehouseService.findOne(id);
     if (!existing) {
       throw new NotFoundException(`Склад с ID ${id} не найден`);

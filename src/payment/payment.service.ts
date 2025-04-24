@@ -80,8 +80,7 @@ export class PaymentService {
     };
   }
 
-
   async findAllPayments() {
-    return this.prisma.payment.findMany();
+    return this.prisma.payment.findMany({});
   }
 }

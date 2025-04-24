@@ -24,7 +24,7 @@
         <button type="submit">Создать склад</button>
       </form>
 
-      <form method="GET" action="/warehouse/search" style="margin-bottom: 20px;">
+      <form id="searchWarehouseForm" method="GET" action="/warehouse/search" style="margin-bottom: 20px;">
         <input type="text" name="location" placeholder="Введите местоположение склада">
         <button type="submit">Поиск</button>
       </form>
@@ -63,6 +63,7 @@
   <main>
     <section class="table-container">
       <h3>Список складов</h3>
+      <p>{{message}}</p>
       <form method="GET" action="/warehouse/search" style="margin-bottom: 20px;">
         <input type="text" name="location" placeholder="Введите местоположение склада">
         <button type="submit">Поиск</button>
@@ -137,6 +138,7 @@
 
   });
 </script>
+
 
 
 </body>

@@ -1,21 +1,34 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Query,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { ReviewService } from './review.service';
 import { Review } from './entities/review.entity';
 import { CreateReviewInput } from './dto/create-review.input';
 import { NotFoundException } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
+import { UserService } from '../user/user.service';
+import { WarehouseService } from '../warehouse/warehouse.service';
 
 @Resolver(() => Review)
 export class ReviewResolver {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(
+    private readonly reviewService: ReviewService,
+    private readonly userService: UserService,
+    private readonly warehouseService: WarehouseService,
+  ) {}
 
   @Query(() => [Review], { name: 'reviews' })
-  findAll() {
+  viewAllReview() {
     return this.reviewService.findAll();
   }
 
   @Query(() => Review, { name: 'review' })
-  async findOne(@Args('id') id: number) {
+  async findSingleReview(@Args('id') id: number) {
     const review = await this.reviewService.findOne(id);
     if (!review) {
       throw new NotFoundException(`Review with id ${id} not found`);
@@ -24,7 +37,7 @@ export class ReviewResolver {
   }
 
   @Mutation(() => Review)
-  createReview(
+  leaveFeedback(
     @Args('createReviewInput') CreateReviewInput: CreateReviewInput,
     @Args('userId', { type: () => String }) userId: string,
   ) {
@@ -36,8 +49,20 @@ export class ReviewResolver {
 
   @Mutation(() => Review)
   async removeReview(@Args('id') id: number) {
-    const review = await this.reviewService.findOne(id); // получить перед удалением
+    const review = await this.reviewService.findOne(id);
     await this.reviewService.remove(id);
     return review;
+  }
+
+  @ResolveField()
+  async user(@Parent() review: Review) {
+    if (!review.user_id) return null;
+    return this.userService.findById(review.user_id);
+  }
+
+  @ResolveField()
+  async warehouse(@Parent() review: Review) {
+    if (!review.warehouse_id) return null;
+    return this.warehouseService.findOne(review.warehouse_id);
   }
 }

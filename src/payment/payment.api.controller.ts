@@ -4,6 +4,7 @@ import {
   Body,
   Delete,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
@@ -12,9 +13,14 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/auth.guard';
+import { Roles } from '../auth/public.decorator';
+import { user_role_enum } from '@prisma/client';
 
 @ApiTags('payment')
+@UseGuards(AuthGuard)
 @Controller('api/payment')
 export class PaymentApiController {
   constructor(private readonly paymentService: PaymentService) {}
@@ -27,6 +33,7 @@ export class PaymentApiController {
     status: 404,
     description: 'Бронь не найдена или склад отсутствует',
   })
+  @ApiResponse({ status: 400, description: 'Неверный формат данных' })
   async create(@Body() dto: CreatePaymentDto) {
     const reservation = await this.paymentService.findReservation(dto);
 
@@ -39,6 +46,8 @@ export class PaymentApiController {
   }
 
   @Delete(':reservationId')
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
   @ApiOperation({ summary: 'Удаление оплаты по ID брони' })
   @ApiBody({ type: CreatePaymentDto })
   @ApiResponse({ status: 200, description: 'Оплата успешно удалена' })

@@ -16,4 +16,7 @@ export class Warehouse {
 
   @Field({ nullable: true })
   description?: string;
+
+  @Field({ nullable: true })
+  elapsedTime?: string;
 }

@@ -9,5 +9,6 @@ import { UserResolver } from './user.resolver';
   imports: [PrismaModule],
   controllers: [UserController, UserApiController],
   providers: [UserService, UserResolver],
+  exports: [UserService],
 })
 export class UserModule {}

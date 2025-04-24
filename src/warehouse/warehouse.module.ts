@@ -10,5 +10,6 @@ import { WarehouseResolver } from './warehouse.resolver';
   imports: [PrismaModule, EventEmitterModule.forRoot()],
   controllers: [WarehouseController, WarehouseApiController],
   providers: [WarehouseService, WarehouseResolver],
+  exports: [WarehouseService],
 })
 export class WarehouseModule {}

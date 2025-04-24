@@ -1,5 +1,13 @@
-import 'express-session';
+import type { SessionContainerInterface } from 'supertokens-node/recipe/session';
 import { user_role_enum } from '@prisma/client';
+import 'express';
+import 'express-session';
+
+declare module 'express' {
+  interface Request {
+    session?: SessionContainerInterface;
+  }
+}
 
 declare module 'express-session' {
   interface SessionData {
@@ -12,3 +20,4 @@ declare module 'express-session' {
     };
   }
 }
+export { user_role_enum };

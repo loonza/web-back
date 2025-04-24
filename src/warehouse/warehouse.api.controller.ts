@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   NotFoundException,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { WarehouseService } from './warehouse.service';
 import { CreateWarehouseDto } from './dto/create-warehouse.dto';
@@ -18,9 +19,15 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
+import { CacheTTL } from '@nestjs/common/cache';
+import { AuthGuard } from '../auth/auth.guard';
+import { Roles } from '../auth/public.decorator';
+import { user_role_enum } from '@prisma/client';
 
 @ApiTags('warehouse')
+@UseGuards(AuthGuard)
 @Controller('api/warehouse')
 export class WarehouseApiController {
   constructor(private readonly warehouseService: WarehouseService) {}
@@ -28,10 +35,24 @@ export class WarehouseApiController {
   @Get('')
   @ApiOperation({ summary: 'Получить все склады с пагинацией' })
   @ApiResponse({ status: 200, description: 'Список складов получен' })
+  @ApiResponse({
+    status: 400,
+    description: 'Ошибка при ввода значений пагинации',
+  })
+  @CacheTTL(10) // TTL 10 секунд
   async findAll(
     @Query('page', new ParseIntPipe()) page: number = 1,
     @Query('limit', new ParseIntPipe()) limit: number = 10,
   ) {
+    if (page < 1) {
+      throw new BadRequestException(
+        'Параметр page должен быть больше или равен 1',
+      );
+    }
+    if (limit < 1) {
+      throw new BadRequestException('Параметр limit должен быть больше 0');
+    }
+
     const [data, total] = (await this.warehouseService.findAllPaginated(
       page,
       limit,
@@ -46,6 +67,7 @@ export class WarehouseApiController {
     if (page < totalPages) {
       links.push(`<api/warehouse?page=${page + 1}&limit=${limit}>; rel="next"`);
     }
+    console.log(`📦 Вызов findAll: page=${page}, limit=${limit}`);
 
     return {
       data,
@@ -74,6 +96,8 @@ export class WarehouseApiController {
   }
 
   @Post()
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
   @ApiOperation({ summary: 'Создать новый склад' })
   @ApiResponse({ status: 201, description: 'Склад создан' })
   @ApiResponse({ status: 400, description: 'Ошибка валидации' })
@@ -89,10 +113,12 @@ export class WarehouseApiController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
   @ApiOperation({ summary: 'Удалить склад' })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Склад удалён' })
-  @ApiResponse({ status: 404, description: 'Склад не найден' })
+  @ApiResponse({ status: 400, description: 'Склад не найден' })
   async remove(@Param('id') id: string) {
     try {
       const result = await this.warehouseService.remove(id);

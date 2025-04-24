@@ -10,12 +10,12 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => [User])
-  async users() {
+  async viewdAllUsers() {
     return this.userService.findAllUsers();
   }
 
   @Query(() => User)
-  async user(@Args('username', { type: () => String }) username: string) {
+  async findUserByUsername(@Args('username', { type: () => String }) username: string) {
     const user = await this.userService.findById(username);
     if (!user) {
       throw new NotFoundException(`Пользователь с id ${username} не найден`);
@@ -24,12 +24,12 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+  async Register(@Args('createUserInput') createUserInput: CreateUserInput) {
     return this.userService.create(createUserInput as CreateUserDto);
   }
 
   @Mutation(() => User)
-  async removeUser(@Args('id', { type: () => String }) id: string) {
+  async deleteAccount(@Args('id', { type: () => String }) id: string) {
     return this.userService.removeById(id);
   }
 }

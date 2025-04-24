@@ -7,6 +7,7 @@ export class CreatePaymentInput {
   @IsNumber()
   @Min(1, { message: 'ID брони должен быть положительным числом' })
   reservationId: number;
+
   @Field(() => Float, { nullable: true })
   @IsNumber()
   @IsPositive()

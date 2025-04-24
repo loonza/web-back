@@ -11,6 +11,7 @@
 {{#if isAdmin}}
 <main>
   <section class="table-container">
+    <p>Время обработки запроса на сервере: {{elapsedTime}}</p>
 
     {{#if reviews.length}}
       <table class="tariff-table4">
@@ -45,16 +46,21 @@
       <p>Пока нет отзывов.</p>
     {{/if}}
 
+
+
   </section>
 </main>
+
+
 {{/if}}
 
 {{#if (or isUser (not user))}}
   <main>
 
     <section class="table-container">
+      <p>Время обработки запроса на сервере: {{elapsedTime}} </p>
 
-      <form method="POST" action="/review/create">
+      <form id="createReviewForm" method="POST" action="/review/create">
         <label for="rating">Оценка (1-5):</label>
         <input type="number" name="rating" placeholder="Оценка (1-5)" min="1" max="5" required>
 
@@ -90,6 +96,42 @@
         <p>Пока нет отзывов.</p>
       {{/if}}
 
+
     </section>
   </main>
+
+
 {{/if}}
+
+
+<script>
+  const form = document.getElementById('createReviewForm');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const payload = new URLSearchParams(formData);
+
+    try {
+      const response = await fetch('/review/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: payload,
+      });
+
+      if (response.ok) {
+        form.reset();
+        alert('Отзыв успешно отправлен!');
+      } else {
+        const error = await response.json();
+        alert( error.message || 'Ошибка при отправке отзыва');
+      }
+    } catch (err) {
+      alert('Сервер не отвечает или произошла ошибка.');
+    }
+  });
+</script>
+

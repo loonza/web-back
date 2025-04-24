@@ -7,6 +7,7 @@ export class UpdateReviewDto extends PartialType(CreateReviewDto) {
   @ApiProperty()
   @IsNumber()
   rating?: number;
+
   @ApiProperty()
   @IsString()
   comment?: string;

@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { user_role_enum } from '@prisma/client';
 
 @ObjectType()
 export class User {
@@ -12,8 +13,11 @@ export class User {
   email: string;
 
   @Field()
-  role: string;
+  role: user_role_enum;
 
   @Field()
   created_at: Date;
+
+  @Field({ nullable: true })
+  elapsedTime?: string;
 }

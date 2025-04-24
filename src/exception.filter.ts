@@ -18,6 +18,11 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     let message = 'Произошла ошибка';
     let statusCode = 400;
 
+    if (exception.code === 'P2025') {
+      message = 'Запись не найдена';
+      statusCode = 404;
+    }
+
     if (exception.code === 'P2003') {
       const field = exception.meta?.field_name as string;
 
@@ -26,6 +31,9 @@ export class PrismaExceptionFilter implements ExceptionFilter {
         statusCode = 404;
       } else if (field.includes('warehouse_id')) {
         message = 'Склад с таким ID не найден';
+        statusCode = 404;
+      } else if (field.includes('reservation_id')) {
+        message = 'Бронь с таким ID не найдена';
         statusCode = 404;
       } else {
         message = 'Ошибка';
