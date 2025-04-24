@@ -7,39 +7,35 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Response } from 'express';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-require-imports
 const onHeaders = require('on-headers');
 
 @Injectable()
 export class ElapsedTimeInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const start = Date.now();
     const isHttp = context.getType<'http'>() === 'http';
     const isGraphQL = context.getType<'graphql'>() === 'graphql';
 
     if (isHttp) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const response = context.switchToHttp().getResponse();
+      const res = context.switchToHttp().getResponse<Response>();
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      onHeaders(response, () => {
+      onHeaders(res, () => {
         const elapsed = `${Date.now() - start}ms`;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        response.setHeader('X-Elapsed-Time', elapsed);
-        response.locals.elapsedTime = elapsed;
+        res.setHeader('X-Elapsed-Time', elapsed);
+        res.locals.elapsedTime = elapsed;
         console.log(`[HTTP] Elapsed time: ${elapsed}`);
       });
 
       return next.handle().pipe(
-        map((data) => {
+        map((data: any) => {
           const elapsed = `${Date.now() - start}ms`;
-          if (isHttp && typeof data === 'object' && data !== null) {
+          if (typeof data === 'object' && data !== null) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return {
-              ...data,
-              elapsedTime: elapsed,
-            };
+            return { ...data, elapsedTime: elapsed };
           }
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return data;
@@ -48,30 +44,29 @@ export class ElapsedTimeInterceptor implements NestInterceptor {
     }
 
     if (isGraphQL) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const gqlCtx = GqlExecutionContext.create(context).getContext();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const response = gqlCtx?.res;
+      const gqlCtx = GqlExecutionContext.create(context).getContext<{
+        res?: Response;
+      }>();
+      const res = gqlCtx?.res;
 
-      if (response) {
+      if (res) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        onHeaders(response, () => {
+        onHeaders(res, () => {
           const elapsed = `${Date.now() - start}ms`;
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          response.setHeader('X-Elapsed-Time', elapsed);
-          response.locals.elapsedTime = elapsed;
-          console.log(` [GraphQL] Elapsed time: ${elapsed}`);
+          res.setHeader('X-Elapsed-Time', elapsed);
+          res.locals.elapsedTime = elapsed;
+          console.log(`[GraphQL] Elapsed time: ${elapsed}`);
         });
       }
 
       return next.handle().pipe(
-        map((data) => {
+        map((data: any) => {
           const elapsed = `${Date.now() - start}ms`;
-          if (typeof data === 'object') {
-            if (Array.isArray(data)) {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-              return data.map((item) => ({ ...item, elapsedTime: elapsed }));
-            }
+          if (Array.isArray(data)) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return data.map((item) => ({ ...item, elapsedTime: elapsed }));
+          }
+          if (typeof data === 'object' && data !== null) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return { ...data, elapsedTime: elapsed };
           }

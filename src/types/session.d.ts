@@ -20,4 +20,5 @@ declare module 'express-session' {
     };
   }
 }
+
 export { user_role_enum };

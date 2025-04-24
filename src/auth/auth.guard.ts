@@ -6,6 +6,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,13 +17,20 @@ export class AuthGuard implements CanActivate {
       'roles',
       context.getHandler(),
     );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = context.switchToHttp().getRequest();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const user = request.session?.user;
+
+    const request = context.switchToHttp().getRequest<Request>();
+
+    const user = request.session?.user as
+      | {
+          id: string;
+          username: string;
+          email?: string;
+          password: string;
+          role: string;
+        }
+      | undefined;
 
     if (!user) throw new UnauthorizedException('Пользователь не авторизован');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     if (requiredRoles && !requiredRoles.includes(user.role)) {
       throw new ForbiddenException('Нет доступа');
     }

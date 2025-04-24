@@ -21,7 +21,6 @@ import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import { errorHandler } from 'supertokens-node/framework/express';
 import * as cors from 'cors';
 
-
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
