@@ -28,5 +28,22 @@
   </section>
 </main>
 
+<h1>Загрузка изображения</h1>
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+  <label for="file">Выберите изображение:</label>
+  <input type="file" name="file" id="file" accept="image/*" required />
+
+  <br><br>
+
+  <button type="submit">Загрузить</button>
+</form>
+
+{{#if imageUrl}}
+  <h2>Файл загружен:</h2>
+  <p><a href="{{imageUrl}}" target="_blank">{{imageUrl}}</a></p>
+  <img src="{{imageUrl}}" alt="Загруженное изображение" style="max-width: 300px;">
+{{/if}}
+
 </body>
 </html>

@@ -1,12 +1,14 @@
 import {
   Controller,
   Post,
+  Req,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService } from './storage.service';
-import { Express } from 'express';
+import { Express, Request, Response } from 'express';
 
 @Controller('upload')
 export class UploadController {
@@ -27,8 +29,21 @@ export class UploadController {
   )
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<{ url: string }> {
-    const url = await this.storageService.uploadFile(file);
-    return { url };
+    @Res() res: Response,
+    @Req() req: Request,
+  ): Promise<void> {
+    if (!file) {
+      res.status(400).send('Файл не загружен');
+    }
+
+    const imageUrl = await this.storageService.uploadFile(file);
+
+    const acceptsHtml = req.headers.accept?.includes('text/html');
+
+    if (acceptsHtml) {
+      return res.render('services', { imageUrl });
+    } else {
+      res.json({ imageUrl });
+    }
   }
 }

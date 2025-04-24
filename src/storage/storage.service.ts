@@ -10,16 +10,13 @@ export class StorageService {
   constructor(@Inject('S3_CLIENT') private readonly s3: S3Client) {}
 
   async uploadFile(file: Express.Multer.File): Promise<string> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     const ext = path.extname(file.originalname);
     const key = `${uuid()}${ext}`;
 
     const command = new PutObjectCommand({
       Bucket: 'm3312-vafaullin',
       Key: key,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       Body: file.buffer,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       ContentType: file.mimetype,
     });
 
