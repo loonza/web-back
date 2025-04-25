@@ -1,5 +1,5 @@
 // src/app.module.ts
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -28,7 +28,7 @@ const depthLimit = require('graphql-depth-limit');
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
-      path: '/graphql',
+      introspection: true,
       sortSchema: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       validationRules: [depthLimit(3)],
