@@ -24,11 +24,13 @@ const depthLimit = require('graphql-depth-limit');
 
 @Module({
   imports: [
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: true,
       path: '/graphql',
       playground: true,
       introspection: true,
+      sortSchema: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       validationRules: [depthLimit(3)],
     }),
