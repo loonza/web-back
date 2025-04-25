@@ -34,6 +34,10 @@ export class ReservationApiController {
   @ApiBody({ type: CreateReservationDto })
   @ApiResponse({ status: 201, description: 'Бронирование создано' })
   @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
+  @ApiResponse({
     status: 404,
     description: 'Ошибка создания, проверьте вводиммые данные',
   })
@@ -65,6 +69,10 @@ export class ReservationApiController {
     status: 200,
     description: 'Список бронирований с привязкой к складам',
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @ApiResponse({ status: 404, description: 'Бронирование не найдено' })
   async findAll(@Param('userId') userId: string) {
     const reservations = await this.reservationService.findAll(userId);
@@ -79,6 +87,10 @@ export class ReservationApiController {
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Бронирование удалено' })
   @ApiResponse({ status: 400, description: 'Бронирование не найдено' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   async remove(@Param('id') id: string) {
     if (!id || Number(id) <= 0) {
       throw new BadRequestException(

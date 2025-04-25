@@ -33,6 +33,10 @@ export class UserApiController {
   @Post('')
   @ApiOperation({ summary: 'Создание пользователя' })
   @ApiResponse({ status: 201, description: 'Пользователь создан' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @ApiBody({ type: CreateUserDto })
   create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
@@ -44,6 +48,11 @@ export class UserApiController {
   @ApiOperation({ summary: 'Получить пользователя по Username' })
   @ApiResponse({ status: 404, description: 'Пользователь не найден' })
   @ApiResponse({ status: 200, description: 'Пользователь найден' })
+  @ApiResponse({ status: 403, description: 'Нет доступа' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @ApiParam({ name: 'username', type: String })
   async findOne(@Param('username') username: string) {
     return this.userService.findByUsername(username);
@@ -55,6 +64,10 @@ export class UserApiController {
   @ApiOperation({ summary: 'Получить всех пользователей (только для админа)' })
   @ApiResponse({ status: 200, description: 'Список пользователей' })
   @ApiResponse({ status: 403, description: 'Нет доступа' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   async findAll() {
     return this.userService.findAllUsers();
   }
@@ -63,6 +76,10 @@ export class UserApiController {
   @ApiOperation({ summary: 'Обновить пользователя' })
   @ApiResponse({ status: 200, description: 'Пароль обновлен' })
   @ApiResponse({ status: 404, description: 'Неверный id пользователя' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @ApiParam({ name: 'id', type: String })
   @ApiBody({ type: UpdateUserDto })
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
@@ -70,9 +87,19 @@ export class UserApiController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
+  @Roles(user_role_enum.owner)
   @ApiOperation({ summary: 'Удалить пользователя' })
   @ApiResponse({ status: 204, description: 'Пользователь удален' })
   @ApiResponse({ status: 404, description: 'Неверный id пользователя' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Нет доступа',
+  })
   @ApiParam({ name: 'id', type: String })
   @HttpCode(204)
   remove(@Param('id') id: string) {

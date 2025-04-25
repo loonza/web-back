@@ -28,6 +28,7 @@ const depthLimit = require('graphql-depth-limit');
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
+      path: '/graphql',
       sortSchema: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       validationRules: [depthLimit(3)],

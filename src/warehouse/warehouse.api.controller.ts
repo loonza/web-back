@@ -39,6 +39,10 @@ export class WarehouseApiController {
     status: 400,
     description: 'Ошибка при ввода значений пагинации',
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @CacheTTL(10) // TTL 10 секунд
   async findAll(
     @Query('page', new ParseIntPipe()) page: number = 1,
@@ -67,7 +71,6 @@ export class WarehouseApiController {
     if (page < totalPages) {
       links.push(`<api/warehouse?page=${page + 1}&limit=${limit}>; rel="next"`);
     }
-    console.log(`📦 Вызов findAll: page=${page}, limit=${limit}`);
 
     return {
       data,
@@ -77,7 +80,6 @@ export class WarehouseApiController {
         limit,
         totalPages,
       },
-      links,
     };
   }
 
@@ -86,6 +88,10 @@ export class WarehouseApiController {
   @ApiParam({ name: 'location', type: String })
   @ApiResponse({ status: 200, description: 'Склад найден' })
   @ApiResponse({ status: 404, description: 'Склад не найден' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   async search(@Param('location') location: string) {
     const warehouse = await this.warehouseService.search(location);
     if (!warehouse) throw new NotFoundException('Склад не найден');
@@ -101,6 +107,14 @@ export class WarehouseApiController {
   @ApiOperation({ summary: 'Создать новый склад' })
   @ApiResponse({ status: 201, description: 'Склад создан' })
   @ApiResponse({ status: 400, description: 'Ошибка валидации' })
+  @ApiResponse({
+    status: 403,
+    description: 'Нет доступа',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @ApiBody({ type: CreateWarehouseDto })
   async create(@Body() dto: CreateWarehouseDto) {
     try {
@@ -119,6 +133,14 @@ export class WarehouseApiController {
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Склад удалён' })
   @ApiResponse({ status: 400, description: 'Склад не найден' })
+  @ApiResponse({
+    status: 403,
+    description: 'Нет доступа',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   async remove(@Param('id') id: string) {
     try {
       const result = await this.warehouseService.remove(id);
@@ -126,7 +148,7 @@ export class WarehouseApiController {
       return { message: 'Склад успешно удален' };
     } catch (error) {
       throw new BadRequestException(
-        error.message || 'Невверно введен id склада',
+        error.message || 'Неверно введен id склада',
       );
     }
   }

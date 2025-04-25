@@ -33,6 +33,10 @@ export class PaymentApiController {
     status: 404,
     description: 'Бронь не найдена или склад отсутствует',
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   @ApiResponse({ status: 400, description: 'Неверный формат данных' })
   async create(@Body() dto: CreatePaymentDto) {
     const reservation = await this.paymentService.findReservation(dto);
@@ -53,6 +57,14 @@ export class PaymentApiController {
   @ApiResponse({ status: 200, description: 'Оплата успешно удалена' })
   @ApiResponse({ status: 404, description: 'Оплата не найдена' })
   @ApiResponse({ status: 400, description: 'Неверный формат данных' })
+  @ApiResponse({
+    status: 403,
+    description: 'Нет доступа',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   async removeByReservation(@Body() dto: CreatePaymentDto) {
     const payment = await this.paymentService.findReservation(dto);
     if (!payment) {

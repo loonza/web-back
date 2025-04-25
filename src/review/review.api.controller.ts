@@ -32,6 +32,10 @@ export class ReviewApiController {
   @ApiParam({ name: 'userId', type: 'string', description: 'ID пользователя' })
   @ApiBody({ type: CreateReviewDto })
   @ApiResponse({ status: 201, description: 'Отзыв создан' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   create(@Param('userId') userId: string, @Body() dto: CreateReviewDto) {
     return this.reviewService.create(userId, dto);
   }
@@ -40,6 +44,10 @@ export class ReviewApiController {
   @ApiOperation({ summary: 'Получить отзывы пользователей' })
   @ApiParam({ name: 'userId', type: 'string', description: 'ID пользователя' })
   @ApiResponse({ status: 200, description: 'Список отзывов' })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   findAll() {
     return this.reviewService.findAll();
   }
@@ -51,6 +59,14 @@ export class ReviewApiController {
   @ApiParam({ name: 'id', type: 'string', description: 'ID отзыва' })
   @ApiResponse({ status: 200, description: 'Отзыв удалён' })
   @ApiResponse({ status: 404, description: 'Отзыв не найден' })
+  @ApiResponse({
+    status: 403,
+    description: 'Нет доступа',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Пользователь не авторизован',
+  })
   remove(@Param('id') id: string) {
     return this.reviewService.remove(Number(id));
   }

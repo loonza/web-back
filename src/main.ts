@@ -68,6 +68,10 @@ async function bootstrap() {
     }),
   );
   app.use(middleware());
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+  });
   app.use(errorHandler());
   // app.enableCors({
   //   origin: 'http://localhost:4000',
