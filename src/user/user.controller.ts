@@ -120,7 +120,6 @@ export class UserController {
         signInResult.recipeUserId,
       );
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const userInDb = await this.userService.findByEmail(email);
       if (!userInDb) {
         return res
@@ -132,7 +131,6 @@ export class UserController {
         id: userInDb.id,
         username: userInDb.username,
         email: userInDb.email,
-        password: userInDb.password,
         role: userInDb.role,
       };
 

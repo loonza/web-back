@@ -20,6 +20,7 @@ import Session from 'supertokens-node/recipe/session';
 import EmailPassword from 'supertokens-node/recipe/emailpassword';
 import { errorHandler } from 'supertokens-node/framework/express';
 import * as cors from 'cors';
+import { ElapsedTimeMiddleware } from './common/interceptors/elapsedtime-middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -67,17 +68,14 @@ async function bootstrap() {
       credentials: true,
     }),
   );
-
   app.use(middleware());
   app.enableCors({
     origin: '*',
     credentials: true,
   });
+
   app.use(errorHandler());
-  // app.enableCors({
-  //   origin: 'http://localhost:4000',
-  //   credentials: true,
-  // });
+  app.use(ElapsedTimeMiddleware);
 
   app.use((req, res, next) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

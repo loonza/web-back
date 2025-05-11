@@ -20,7 +20,7 @@ export class UserService {
         id: createUserDto.id,
         username: createUserDto.username,
         email: createUserDto.email,
-        password: createUserDto.password,
+        password: '****',
         role: 'tenant',
       },
     });

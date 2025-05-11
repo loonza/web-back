@@ -1,5 +1,4 @@
-// src/app.module.ts
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,6 +17,7 @@ import { HttpCacheInterceptor } from './common/interceptors/http-cache.intercept
 import { StorageModule } from './storage/storage.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './auth/auth.middleware';
+import { limitOperationCount, limitTopLevelFields } from './graphql-rules';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-require-imports
 const depthLimit = require('graphql-depth-limit');
@@ -31,8 +31,12 @@ const depthLimit = require('graphql-depth-limit');
       playground: true,
       introspection: true,
       sortSchema: true,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      validationRules: [depthLimit(3)],
+      validationRules: [
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        depthLimit(3),
+        limitTopLevelFields(3),
+        limitOperationCount(1),
+      ],
     }),
     CacheModule.register({
       isGlobal: true,

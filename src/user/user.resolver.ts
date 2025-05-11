@@ -10,12 +10,14 @@ export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
   @Query(() => [User])
-  async viewdAllUsers() {
+  async viewAllUsers() {
     return this.userService.findAllUsers();
   }
 
   @Query(() => User)
-  async findUserByUsername(@Args('username', { type: () => String }) username: string) {
+  async findUserByUsername(
+    @Args('username', { type: () => String }) username: string,
+  ) {
     const user = await this.userService.findById(username);
     if (!user) {
       throw new NotFoundException(`Пользователь с id ${username} не найден`);

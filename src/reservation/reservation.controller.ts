@@ -30,7 +30,11 @@ export class ReservationController {
     const reservations = await this.reservationService.findAll(
       req.session.user.id,
     );
-    res.render('reservation', { reservations, user: req.session.user });
+    res.render('reservation', {
+      reservations,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      user: req.session.user,
+    });
   }
 
   @Post(':id/delete')

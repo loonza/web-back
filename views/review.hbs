@@ -11,7 +11,6 @@
 {{#if isAdmin}}
 <main>
   <section class="table-container">
-    <p>Время обработки запроса на сервере: {{elapsedTime}}</p>
 
     {{#if reviews.length}}
       <table class="tariff-table4">
@@ -58,7 +57,6 @@
   <main>
 
     <section class="table-container">
-      <p>Время обработки запроса на сервере: {{elapsedTime}} </p>
 
       <form id="createReviewForm" method="POST" action="/review/create">
         <label for="rating">Оценка (1-5):</label>

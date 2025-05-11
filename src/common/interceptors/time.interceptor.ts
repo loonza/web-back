@@ -4,10 +4,10 @@ import {
   ExecutionContext,
   CallHandler,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-require-imports
 const onHeaders = require('on-headers');
@@ -15,30 +15,23 @@ const onHeaders = require('on-headers');
 @Injectable()
 export class ElapsedTimeInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    const start = Date.now();
     const isHttp = context.getType<'http'>() === 'http';
     const isGraphQL = context.getType<'graphql'>() === 'graphql';
+    const start = Date.now();
 
     if (isHttp) {
+      const req = context.switchToHttp().getRequest<Request>();
       const res = context.switchToHttp().getResponse<Response>();
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      onHeaders(res, () => {
-        const elapsed = `${Date.now() - start}ms`;
-        res.setHeader('X-Elapsed-Time', elapsed);
-        res.locals.elapsedTime = elapsed;
-        console.log(`[HTTP] Elapsed time: ${elapsed}`);
-      });
+      const start = Date.now();
+      res.locals.startAt = start;
 
       return next.handle().pipe(
-        map((data: any) => {
+        tap(() => {
           const elapsed = `${Date.now() - start}ms`;
-          if (typeof data === 'object' && data !== null) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return { ...data, elapsedTime: elapsed };
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          return data;
+          res.setHeader('X-Elapsed-Time', elapsed);
+          res.locals.elapsedTime = elapsed;
+          console.log(' Elapsed time:', elapsed);
         }),
       );
     }
@@ -55,7 +48,7 @@ export class ElapsedTimeInterceptor implements NestInterceptor {
           const elapsed = `${Date.now() - start}ms`;
           res.setHeader('X-Elapsed-Time', elapsed);
           res.locals.elapsedTime = elapsed;
-          console.log(`[GraphQL] Elapsed time: ${elapsed}`);
+          console.log(`Elapsed time: ${elapsed}`);
         });
       }
 
