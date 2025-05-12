@@ -1,20 +1,45 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreateReviewDto } from './dto/create-review.dto';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/common/cache';
+import { Mutex } from 'async-mutex';
 
 @Injectable()
 export class ReviewService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly mutex = new Mutex();
+  constructor(
+    @Inject(CACHE_MANAGER) private cache: Cache,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async findAll() {
-    return this.prisma.review.findMany({
-      include: {
-        user: true,
-        warehouse: true,
-      },
-      orderBy: {
-        created_at: 'desc',
-      },
+    const cacheKey = 'review:all';
+
+    const cached = await this.cache.get(cacheKey);
+    if (cached) {
+      console.log(' review cached');
+      return cached;
+    }
+
+    return this.mutex.runExclusive(async () => {
+      const secondCheck = await this.cache.get(cacheKey);
+      if (secondCheck) {
+        console.log('review cached after wait');
+        return secondCheck;
+      }
+      console.log(' review not cached');
+      const reviews = await this.prisma.review.findMany({
+        include: {
+          user: true,
+          warehouse: true,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
+      await this.cache.set(cacheKey, reviews, 10);
+      return reviews;
     });
   }
 
