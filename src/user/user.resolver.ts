@@ -18,9 +18,11 @@ export class UserResolver {
   async findUserByUsername(
     @Args('username', { type: () => String }) username: string,
   ) {
-    const user = await this.userService.findById(username);
+    const user = await this.userService.findByUsername(username);
     if (!user) {
-      throw new NotFoundException(`Пользователь с id ${username} не найден`);
+      throw new NotFoundException(
+        `Пользователь с username ${username} не найден`,
+      );
     }
     return user;
   }
